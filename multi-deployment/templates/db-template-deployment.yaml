@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: <myApp>-<myDatabase>
+  labels:
+    app: <myApp>
+spec:
+  ports:
+    - port: <myPort exemple -> 3306>
+  selector:
+    app: <myApp>
+    tier: <subSelector exemple database or mysql>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <myApp>-<myDatabase>
+  labels:
+    app: <myApp>
+spec:
+  selector:
+    matchLabels:
+      app: <myApp>
+      tier: <subSelector exemple database or mysql>
+  template:
+    metadata:
+      labels:
+        app: <myApp>
+        tier: <subSelector exemple database or mysql>
+    spec:
+      containers:
+      - image: <myDatabase>:<version/tag>
+        name: <myDatabase>
+        env:
+        - name: <ENV_VAR>
+          value: <VALUE>

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: <myApp>
+  labels:
+    app: <myApp>
+spec:
+  ports:
+    - port: <myPort exemple 80>
+  selector:
+    app: <myApp>
+    tier: <subSelector exemple frontend>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <myApp>
+  labels:
+    app: <myApp>
+spec:
+  selector:
+    matchLabels:
+      app: <myApp>
+      tier: <subSelector exemple frontend>
+  template:
+    metadata:
+      labels:
+        app: <myApp>
+        tier: <subSelector exemple frontend>
+    spec:
+      containers:
+      - image: <myApp>:<version/tag>
+        name: <myApp>
+        env:
+        - name: <ENV_VAR>
+          value: <VALUE>

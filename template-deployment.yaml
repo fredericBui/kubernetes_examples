@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <myApp>-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: <myApp>-label
+  template:
+    metadata:
+      labels:
+        app: <myApp>-label
+    spec:
+      containers:
+      - name: <myApp>
+        image: <myApp>:<version/tag>
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: <myApp>-service
+spec:
+  selector:
+    app: <myApp>-label
+  type: NodePort
+  ports:
+    - port: <myPort exemple -> 80>

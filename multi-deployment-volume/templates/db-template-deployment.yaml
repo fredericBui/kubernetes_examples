@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: <myApp>-<db>
+  labels:
+    app: <myApp>
+spec:
+  ports:
+    - port: <myPort exemple 3306>
+  selector:
+    app: <myApp>
+    tier: <bd>
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: <db>-pv-claim
+  labels:
+    app: <myApp>
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <myApp>-<db>
+  labels:
+    app: <myApp>
+spec:
+  selector:
+    matchLabels:
+      app: <myApp>
+      tier: <db>
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: <myApp>
+        tier: <db>
+    spec:
+      containers:
+      - image: <myImage>
+        name: <containerName>
+        env:
+        - name: <myEnv>
+          value: <myValue>
+        ports:
+        - containerPort: <port exemple 3306>
+          name: <containerName>
+        volumeMounts:
+        - name: <db>-persistent-storage
+          mountPath: <myPath>
+      volumes:
+      - name: <db>-persistent-storage
+        persistentVolumeClaim:
+          claimName: <db>-pv-claim
